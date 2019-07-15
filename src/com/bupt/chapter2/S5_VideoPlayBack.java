@@ -21,7 +21,7 @@ public class S5_VideoPlayBack {
 
         S5_VideoPlayBack vp = new S5_VideoPlayBack();
         vp.initGUI();
-        vp.playVideo();
+        vp.playVideo("C:\\Users\\Administrator\\IdeaProjects\\C\\javaopencvIDEA\\src\\resources\\VideoTestResource.mp4");
     }
 
     /*
@@ -46,25 +46,25 @@ public class S5_VideoPlayBack {
         frame.add(imageLabel);
     }
 
-    private void playVideo()  {
+    private void playVideo(String fileName)  {
         Mat mat = new Mat();
         Image videoFrame;
 
         VideoCapture vc = new VideoCapture();
-        vc.open("C:\\Users\\Administrator\\IdeaProjects\\C\\javaopencvIDEA\\src\\resources\\VideoTestResource.mp4");
+        vc.open(fileName);
         vc.set(Videoio.CAP_PROP_FRAME_WIDTH,800);
         vc.set(Videoio.CAP_PROP_FRAME_HEIGHT,800);
 
         if ( vc.isOpened() ){
             double fps = vc.get(Videoio.CAP_PROP_FPS);
-            System.out.println( fps );
+            //  System.out.println( fps );
             while( true ){
                 vc.read(mat);
                 if ( !mat.empty() ){
                     videoFrame = ImageProcessor.toBufferedImage(mat);
                     ImageIcon imageIcon = new ImageIcon(videoFrame, "Captured Image from video");
                     imageLabel.setIcon( imageIcon );
-                    //frame.pack();
+                    frame.pack();
                 }else {
                     System.out.println("!!!!!!!! Job Finished !!!!!!!!");
                     break;
