@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 
 public class javaScreenShot {
 
-    private static void captureScreen( String folder ,String fileName) throws Exception {
+    private  void captureScreen( String folder ,String fileName) throws Exception {
 
          // Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         // Rectangle screenRectangle = new Rectangle(screenSize);
@@ -50,7 +50,7 @@ public class javaScreenShot {
                 Desktop.getDesktop().open(f);*/
     }
 
-    public static void main(String[] args) {
+    private void startCapture(  ) {
         Date date = new Date();
         SimpleDateFormat folderDatePattern  = new SimpleDateFormat("yyyyMMdd");
         SimpleDateFormat fileDatePattern = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -64,6 +64,13 @@ public class javaScreenShot {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        // javaScreenShot app = new javaScreenShot();
+        //  app.startCapture();
+
+
     }
 
 
