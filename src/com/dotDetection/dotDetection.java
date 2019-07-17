@@ -31,17 +31,18 @@ public class dotDetection {
 
     public static void main(String[] args) {
         dotDetection app = new dotDetection();
-        Map<String, Point[]> colorMap = app.dotClassfier("C:\\Users\\Administrator\\IdeaProjects\\C\\javaopencvIDEA\\resources\\redAndGreenDot.png");
-        Point[] reds = colorMap.get("red");
-        System.out.print(" 红色点的坐标： ");
-        for ( Point p : reds ){
-            System.out.print( " x = " + (int)p.x + " y = " + (int)p.y);
+        Map<String, Object[]> colorMap = app.dotClassfier("C:\\Users\\Administrator\\Desktop\\test.png");
+        Object[] reds = colorMap.get("red");
+        System.out.println(" 红色点的坐标： ");
+        for ( Object p : reds ){
+
+            System.out.println( "\t\t\t x = " + (int)((Point)p).x + " y = " + (int)((Point)p).y);
         }
         System.out.println();
-        Point[] greens = colorMap.get("green");
-        System.out.print(" 绿色点的坐标： ");
-        for ( Point p : greens ){
-            System.out.print( " x = " + (int)p.x + " y = " + (int)p.y);
+        Object[] greens = colorMap.get("green");
+        System.out.println(" 绿色点的坐标： ");
+        for ( Object p : greens ){
+            System.out.println( "\t\t\t x = " + (int) ((Point)p).x + " y = " + (int) ((Point)p).y);
         }
     }
 
@@ -65,14 +66,15 @@ public class dotDetection {
             Imgproc.goodFeaturesToTrack(gray, corners, maxCorners, qualityLevel, minDistance,
                     new Mat(),blockSize,useHarrisDetector,k);
 
+
+
+
+            Point[] pCorners=corners.toArray();
+            for (Point pCorner : pCorners) {
+                Imgproc.circle(dst, pCorner, 4, new Scalar(255, 255, 0), 2);
+            }
+            Imgcodecs.imwrite("resources/xiaofu.png", dst);
             return corners.toArray();
-            // Point[] pCorners=corners.toArray();
-
-
-//            for (Point pCorner : pCorners) {
-//                Imgproc.circle(dst, pCorner, 4, new Scalar(255, 255, 0), 2);
-//            }
-            // Imgcodecs.imwrite("resources/dotted.jpg", dst);
 
         }catch(Exception e){
             System.out.println("例外：" + e);
@@ -80,7 +82,7 @@ public class dotDetection {
         }
     }
 
-    private Map<String,Point[]> dotClassfier(String fileName)  {
+    private Map<String,Object[]> dotClassfier(String fileName)  {
         int rgbR;
         int rgbG;
         int rgbB;
@@ -109,11 +111,11 @@ public class dotDetection {
                 }
             }
 
-            Map<String, Point[]> map = new HashMap<>();
+            Map<String, Object[]> map = new HashMap<>();
 
 
-            map.put("red",(Point[]) redPoints.toArray());
-            map.put("green",(Point[]) greenPoints.toArray());
+            map.put("red", redPoints.toArray());
+            map.put("green",greenPoints.toArray());
             return  map;
         } catch (IOException e) {
             e.printStackTrace();
