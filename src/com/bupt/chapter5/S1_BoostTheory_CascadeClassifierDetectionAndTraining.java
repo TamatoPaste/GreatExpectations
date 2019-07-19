@@ -25,13 +25,13 @@ public class S1_BoostTheory_CascadeClassifierDetectionAndTraining {
         app.loadCascade();
         app.initGUI();
 
-        //Mat image = S3_loadAndDisplayImage.loadImageViaFileName("C:\\Users\\Administrator\\IdeaProjects\\C\\javaopencvIDEA\\src\\resources\\dididada.jpg");
+        Mat image = S3_loadAndDisplayImage.loadImageViaFileName("C:\\Users\\Administrator\\Desktop\\dididada.jpg");
 
-        //app.detectAndDrawFace(image);
+        app.detectAndDrawFace(image);
 
-        //S3_loadAndDisplayImage.displayImageWithSwing(image,"image");
+        S3_loadAndDisplayImage.displayImageWithSwing(image,"image");
 
-        app.playVideo("C:\\Users\\Administrator\\IdeaProjects\\C\\javaopencvIDEA\\src\\resources\\VideoTestResource.mp4");
+        // app.playVideo("C:\\Users\\Administrator\\IdeaProjects\\C\\javaopencvIDEA\\src\\resources\\VideoTestResource.mp4");
     }
 
 
