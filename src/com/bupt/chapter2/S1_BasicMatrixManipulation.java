@@ -7,7 +7,7 @@ public class S1_BasicMatrixManipulation {
     /*
        列数为宽，行数为高
 
-      CV_<bit_depth>{U|S|F}C(<number_of_channels>)
+       CV_<bit_depth>{U|S|F}C(<number_of_channels>)
          U stands for unsigned
          S for signed
          F stands for floating point

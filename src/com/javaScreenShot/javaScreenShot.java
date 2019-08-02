@@ -67,8 +67,8 @@ public class javaScreenShot {
     }
 
     public static void main(String[] args) {
-        // javaScreenShot app = new javaScreenShot();
-        //  app.startCapture();
+        javaScreenShot app = new javaScreenShot();
+         app.startCapture();
 
 
     }
