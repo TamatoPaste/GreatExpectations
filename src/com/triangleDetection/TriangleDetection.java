@@ -1,11 +1,12 @@
 package com.triangleDetection;
 
-import com.lowagie.text.html.simpleparser.Img;
-import com.recognition.software.jdeskew.ImageDeskew;
+
 import org.opencv.core.*;
 import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+
+import java.util.Arrays;
 
 import static org.opencv.highgui.HighGui.imshow;
 import static org.opencv.highgui.HighGui.waitKey;
@@ -48,18 +49,14 @@ public class TriangleDetection {
     }
 
     private static void findPoints(){
-        Mat srcImageChannel3 = Imgcodecs.imread("C:\\Users\\Administrator\\Desktop\\333.png", CvType.CV_32FC3);
-        imshow("src",srcImageChannel3);
-        System.out.println(srcImageChannel3.channels());
-        System.out.println(srcImageChannel3.depth());
-        System.out.println(srcImageChannel3.elemSize());
+        Mat srcImageChannel3 = Imgcodecs.imread("C:\\Users\\Daye Ni\\Desktop\\333.png", CvType.CV_32FC3);
 
-        Mat image = srcImageChannel3;
 
-        // 高斯滤波，实际检测效果并不好
-        //Mat gaussian = new Mat();
-        //Imgproc.GaussianBlur(srcImage,gaussian,new Size(3.0,3.0),0);
-        //Imgcodecs.imwrite("F:\\gaussian.jpg",gaussian);
+       /*  高斯滤波，实际检测效果并不好
+        Mat gaussian = new Mat();
+        Imgproc.GaussianBlur(srcImage,gaussian,new Size(3.0,3.0),0);
+        Imgcodecs.imwrite("F:\\gaussian.jpg",gaussian);
+        */
 
 
         // 中值滤波,ksize必须为奇数
@@ -75,8 +72,8 @@ public class TriangleDetection {
         // 如果为真，则使用更精确的L2范数进行计算（即两个方向的倒数的平方和再开方）
         // 否则使用L1范数（直接将两个方向导数的绝对值相加）。
         Mat canny = new Mat();
-        Imgproc.Canny(image,canny,10,160,3,false);
-        Imgcodecs.imwrite("F:\\canny" + System.currentTimeMillis() +".jpg",canny);
+        Imgproc.Canny(srcImageChannel3,canny,10,160,3,false);
+        //Imgcodecs.imwrite("F:\\canny" + System.currentTimeMillis() +".jpg",canny);
 
         // 霍夫变化计算后的结果是极坐标体系下的线，存在第二个参数中
         // lines中rho就是离坐标原点也就是图像左上角的距离，
@@ -108,38 +105,59 @@ public class TriangleDetection {
             double[] doubles = lines.get(i, 0);
             double rho = doubles[0];
             double theta = doubles[1];
-//            转换成直角坐标系 ，有问题
-//            double x = rho * Math.cos( theta );
-//            double y = rho * Math.sin( theta );
-//            System.out.println( "x:" + x + "  y:" + y);
-
-
-            //Imgproc.line(canny,new Point(x,y),20,new Scalar(0,255,255));
             double k = (-1) * ( Math.cos(theta) / Math.sin(theta));
             double b = rho / (Math.sin(theta));
             ks[i] = k;
             bs[i] = b;
         }
 
-        System.out.println( srcImageChannel3.channels());
-        Point point1 = findPoint(ks[0], bs[0], ks[1], bs[1]);
-        Point point2 = findPoint(ks[0], bs[0], ks[2], bs[2]);
-        Point point3 = findPoint(ks[1], bs[1], ks[3], bs[3]);
-        Imgproc.circle(srcImageChannel3,point1,10,new Scalar(0,0,255),10);
-        System.out.println( point1 );
-        System.out.println( point2 );
-        System.out.println( point3 );
+        for (int  i = 0;  i < lines.rows() - 1;  i++) {
+            for (int j = 0; j < lines.rows(); j++) {
+                Point point = findPoint(ks[i],bs[i],ks[j],bs[j]);
+                Imgproc.circle( srcImageChannel3, point,3, new Scalar(0,255,0),2);
 
-        Imgproc.line(srcImageChannel3,point1,point2,new Scalar(255,0,255),2,10,0);
-        Imgproc.line(srcImageChannel3,point1,point3,new Scalar(255,0,255));
-        Imgproc.line(srcImageChannel3,point3,point2,new Scalar(255,0,255));
+            }
+        }
 
-        imshow("iamge",canny);
+//        Imgproc.line(srcImageChannel3,point1,point2,new Scalar(255,0,0),2,10,0);
+//        Imgproc.line(srcImageChannel3,point1,point3,new Scalar(255,0,0),2,10,0);
+//        Imgproc.line(srcImageChannel3,point3,point2,new Scalar(255,0,0),2,10,0);
+        imshow("srcImage",srcImageChannel3);
+        waitKey(0);
+    }
+
+    private static void ppht(String imagePath){
+        Mat src = Imgcodecs.imread(imagePath, CvType.CV_32FC3);
+
+        Mat edges = new Mat();
+        Imgproc.Canny(src,edges,200,500);
+        imshow("edges",edges);
+
+
+        Mat lines = new Mat();
+        Imgproc.HoughLinesP(edges,lines,1,Math.PI /180,5);
+        System.out.println("直线数：" + lines.rows());
+//        // 为啥lines一行是四个数？？？不应该是两个么？？？
+//        //  返回的是（x0,y0）,(x1,y1)，已经帮我们转换到了直角坐标系空间，并提供了线上的两个点
+//        System.out.println(lines.depth()); // 4
+//        System.out.println(lines.channels());  // 4
+//        System.out.println(lines.rows());   // 96
+//        System.out.println(lines.cols());   // 1
+        for (int i = 0; i < lines.rows(); i++) {
+            double[] doubles = lines.get(i, 0);
+            //System.out.println(Arrays.toString(doubles));
+            Imgproc.line(src,new Point(doubles[0],doubles[1]),
+                    new Point(doubles[2],doubles[3]),
+                    new Scalar(255,0,0),2,2);
+        }
+
+        imshow("line_detected",src);
         waitKey(0);
     }
 
 
     public static void main(String[] args) {
-    findPoints();
+        //findPoints();
+        ppht("D:\\image\\20190715\\222.png");
     }
 }
