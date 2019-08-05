@@ -14,7 +14,7 @@ public class OCR {
 
     public static void main(String[] args){
 
-        File image = new File("C:\\Users\\Administrator\\IdeaProjects\\C\\javaopencvIDEA\\resources\\OCRTest04.png");
+        File image = new File("C:\\Users\\Administrator\\IdeaProjects\\C\\Great Expectations\\resources\\OCRTest04.png");
         ITesseract tesseract = new Tesseract();
 
 
